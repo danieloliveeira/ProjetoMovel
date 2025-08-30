@@ -1,0 +1,73 @@
+{
+	"info": {
+		"_postman_id": "37e4bfe0-bac9-4157-b839-3a3446a3601e",
+		"name": "WYDEN GAMES",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44894815",
+		"_collection_link": "https://danielvitor-903236.postman.co/workspace/Daniel-Vitor's-Workspace~2747e533-5210-4b4b-8dda-7f16b23d9f11/collection/44894815-37e4bfe0-bac9-4157-b839-3a3446a3601e?action=share&source=collection_link&creator=44894815"
+	},
+	"item": [
+		{
+			"name": "Games - ALL",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Games -  ID",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Games - List",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Games - List by ID",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Games - List replacement",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sourceIndex\": 4,\r\n    \"destinationIndex\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/lists/2/replacement",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lists",
+						"2",
+						"replacement"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
