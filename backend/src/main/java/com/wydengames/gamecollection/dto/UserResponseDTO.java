@@ -1,4 +1,11 @@
 package com.wydengames.gamecollection.dto;
 
-public class UserResponseDTO {
+import com.wydengames.gamecollection.entites.User;
+import lombok.Builder;
+
+
+
+@Builder
+public record UserResponseDTO(Long id, String username, String email ){
+
 }
