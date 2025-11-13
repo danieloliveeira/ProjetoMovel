@@ -41,21 +41,25 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                // Habilitar CORS usando a configuração definida no bean corsConfigurationSource()
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // Configurar a política de sessão para STATELESS
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // Definir as regras de autorização para as requisições
                 .authorizeHttpRequests(auth -> auth
-                        // Permitir requisições OPTIONS para qualquer rota (essencial para o preflight do CORS)
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // Permitir acesso público aos endpoints de login e registro
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
-                        // Qualquer outra requisição precisa de autenticação
+                        .requestMatchers(HttpMethod.GET, "/users/profile").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/users/me").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/gamelogs/").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/games/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/games").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                // Adicionar nosso filtro de segurança antes do filtro padrão
+                .headers(headers -> headers
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin())
+                )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
@@ -66,21 +70,15 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    // Bean para configurar as políticas de CORS de forma global e explícita
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Definir as origens permitidas (seu frontend)
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:8081"));
-        // Definir os métodos HTTP permitidos
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        // Definir os cabeçalhos permitidos
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        // Permitir credenciais
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Aplicar a configuração a todas as rotas da aplicação
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

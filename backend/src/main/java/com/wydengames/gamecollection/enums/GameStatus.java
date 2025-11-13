@@ -1,4 +1,8 @@
-package com.wydengames.gamecollection.domain;
+package com.wydengames.gamecollection.enums;
 
-public class GameStatus {
+public enum GameStatus {
+    PLAYED,
+    PLAYING,
+    BACKLOG,
+    WISHLIST
 }

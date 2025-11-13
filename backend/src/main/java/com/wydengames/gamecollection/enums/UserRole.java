@@ -1,4 +1,4 @@
-package com.wydengames.gamecollection.entites;
+package com.wydengames.gamecollection.enums;
 
 public enum UserRole {
     ADMIN,

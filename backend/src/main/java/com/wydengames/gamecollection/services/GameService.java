@@ -6,6 +6,7 @@ import com.wydengames.gamecollection.entites.Game;
 import com.wydengames.gamecollection.repositories.GameRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,4 +35,13 @@ public class GameService {
     public List<GameMinDTO> findByList(Long listId){
         return gameRepository.searchByList(listId).stream().map(GameMinDTO::new).toList();
     }
+    @Transactional
+    public GameDTO createGame(GameDTO dto) {
+        Game newGame = new Game();
+        BeanUtils.copyProperties(dto, newGame, "id");
+
+        Game savedGame = gameRepository.save(newGame);
+        return new GameDTO(savedGame);
+    }
+
 }

@@ -1,4 +1,9 @@
 package com.wydengames.gamecollection.dto;
 
-public class UserUpdateResponseDTO {
-}
+import lombok.Builder;
+
+@Builder
+public record UserUpdateResponseDTO(
+        UserResponseDTO userDetails,
+        String newToken
+) {}

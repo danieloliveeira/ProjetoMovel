@@ -1,18 +1,17 @@
 package com.wydengames.gamecollection.controllers;
 
-import com.wydengames.gamecollection.dto.LoginRequestDTO;
-import com.wydengames.gamecollection.dto.LoginResponseDTO;
-import com.wydengames.gamecollection.dto.UserCreateDTO;
-import com.wydengames.gamecollection.dto.UserResponseDTO;
+import com.wydengames.gamecollection.dto.*;
 import com.wydengames.gamecollection.entites.User;
 import com.wydengames.gamecollection.services.TokenService;
 import com.wydengames.gamecollection.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.core.Authentication;
 
 import java.net.URI;
 
@@ -42,7 +41,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO data) {
-
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
 
         var auth = this.authenticationManager.authenticate(usernamePassword);
@@ -50,5 +48,40 @@ public class UserController {
         var token = tokenService.generateToken((User) auth.getPrincipal());
 
         return ResponseEntity.ok(new LoginResponseDTO(token));
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserResponseDTO> getMyProfile(Authentication authentication) {
+        String userEmail = authentication.getName();
+        UserResponseDTO userDetails = userService.findUserDetailsByEmail(userEmail);
+
+        return ResponseEntity.ok(userDetails);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<UserUpdateResponseDTO> updateMyProfile(
+             @RequestBody UserUpdateRequestDTO userUpdateRequestDTO,
+            Authentication authentication
+    ) {
+        String currentEmail = authentication.getName();
+
+        User updatedUser = userService.updateUser(currentEmail, userUpdateRequestDTO);
+
+        String newToken = tokenService.generateToken(updatedUser);
+
+        UserResponseDTO userDetailsDTO = userService.findUserDetailsByEmail(updatedUser.getEmail());
+
+        UserUpdateResponseDTO response = UserUpdateResponseDTO.builder()
+                .userDetails(userDetailsDTO)
+                .newToken(newToken)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 }
