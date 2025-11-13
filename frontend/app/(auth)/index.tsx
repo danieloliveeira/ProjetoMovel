@@ -1,10 +1,9 @@
 import AuthTextinput from "@/components/AuthTextInput";
 import BackGroundImage from "@/components/BackGroundImage";
 import PrimaryButton from "@/components/PrimaryButton";
-import Colors from "@/constants/colors";
-
+import colors from "@/constants/Colors";
 import { useAuth } from "@/services/context/AuthContext";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Alert, StyleSheet, Text } from "react-native";
 
@@ -13,7 +12,7 @@ export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-
+    const router = useRouter()
     const {signIn } = useAuth();
 
     async function handleSignIn() {
@@ -24,7 +23,11 @@ export default function LoginScreen() {
         setLoading(true)
         try {
             await signIn({ email, password});
+            setLoading(false)
+            router.navigate('/(tabs)')
+
         } catch (error: any){
+            setLoading(false)
             Alert.alert('Falha no login', error.massage);
         } finally {
             setLoading(false)
@@ -46,16 +49,16 @@ export default function LoginScreen() {
                 placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
+                secureTextEntry
             />
              
             {loading ? (
-                <ActivityIndicator size="large" color={Colors.primary} />
+                <ActivityIndicator size="large" color={colors.primary} />
             ) : (
                 <PrimaryButton title="Login" onPress={handleSignIn} />
             )}
-            {/* <PrimaryButton title="Login" onPress={() => {}} /> */}
 
-             <Link href='/' asChild>
+             <Link href='/signup' asChild>
                 <Text style={styles.linkText}>
                     Esqueceu sua sua senha?
                 </Text>
@@ -72,17 +75,17 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   title: { 
     fontSize: 40,
-    color: Colors.primary,
+    color: colors.primary,
     marginBottom: 20
   },
   linkText: {
-    color: Colors.secondary,
+    color: colors.secondary,
     fontSize: 15,
     textAlign: 'center',
     marginTop: 10,
   },
   highlight: {
-    color: Colors.primary,
+    color: colors.primary,
     fontWeight: 'bold',
   },
 });

@@ -1,7 +1,7 @@
 
-import Colors from "@/constants/colors"
-import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { StyleSheet, TextInput, TextInputProps, View } from "react-native"
+import colors from "@/constants/Colors";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
 
 
 
@@ -13,10 +13,10 @@ type AuthTextInputProps = TextInputProps & {
 const AuthTextinput: React.FC<AuthTextInputProps> = ({icon, ...otherprops }) => {
     return (
         <View style={styles.container}>
-            <MaterialCommunityIcons name={icon} size={22} color={Colors.secondary} style={styles.icon} />
+            <MaterialCommunityIcons name={icon} size={22} color={colors.secondary} style={styles.icon} />
             <TextInput
                 style={styles.input}
-                placeholderTextColor={Colors.secondary}
+                placeholderTextColor={colors.secondary}
                 {...otherprops}
             />
         </View>
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: Colors.primary,
+    color: colors.primary,
     fontSize: 16,
   },
 })

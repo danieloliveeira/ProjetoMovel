@@ -1,5 +1,7 @@
-import Colors from "@/constants/colors";
+
+import colors from "@/constants/Colors";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
+
 
 
 type SecondaryButtonProps = {
@@ -22,13 +24,13 @@ const SecondaryButton: React.FC<SecondaryButtonProps> = ({ text, highlight, onPr
 
 const styles = StyleSheet.create({
     text: {
-    color: Colors.secondary,
+    color: colors.secondary,
     fontSize: 15,
     textAlign: 'center',
     marginTop: 15,
   },
   highlight: {
-    color: Colors.primary,
+    color: colors.primary,
     fontWeight: 'bold',
   },
 })

@@ -1,16 +1,16 @@
 import AuthTextinput from "@/components/AuthTextInput";
 import BackGroundImage from "@/components/BackGroundImage";
 import PrimaryButton from "@/components/PrimaryButton";
-import Colors from "@/constants/colors";
+import Colors from "../../constants/Colors";
 
 import { useAuth } from "@/services/context/AuthContext";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Alert, StyleSheet, Text } from "react-native";
 
 
 export default function SignupScreen() {
-
+  const router = useRouter()
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -25,7 +25,9 @@ export default function SignupScreen() {
       setLoading(true)
       try {
         await signUp({ username, email, password})
-      } catch (error: any) {
+        setLoading(false)
+        router.navigate('/')
+      } catch (error: any) {  
         Alert.alert('Falha no login', error.massage)
       } finally {
         setLoading(true)
@@ -41,7 +43,6 @@ export default function SignupScreen() {
             <AuthTextinput icon="account-outline" placeholder="Username" value={username} onChangeText={setUsername}/> 
             <AuthTextinput icon="email-outline" placeholder="E-mail" value={email} onChangeText={setEmail}/>
             <AuthTextinput icon="lock-outline" placeholder="Password" secureTextEntry value={password} onChangeText={setPassword}/>
-            <AuthTextinput icon="lock-check-outline" placeholder="Confirm Password" secureTextEntry value={password} onChangeText={setPassword}/>
 
             {loading ? (
                 <ActivityIndicator size="large" color={Colors.primary} />
@@ -55,7 +56,6 @@ export default function SignupScreen() {
                 </Text>
             </Link>
 
-            {/* <PrimaryButton title="Sign up" onPress={() => {}} /> */}
         </BackGroundImage>
     )
 }

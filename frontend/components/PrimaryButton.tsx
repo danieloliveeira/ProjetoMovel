@@ -1,5 +1,6 @@
-import Colors from "@/constants/colors";
+
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import colors from "../constants/Colors";
 
 type PrimaryButtonProps = {
     title: string;
@@ -16,7 +17,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({title, onPress }) => {
 const styles = StyleSheet.create({
     button: {
     width: '100%',
-    backgroundColor: Colors.buttonPrimary,
+    backgroundColor: colors.buttonPrimary,
     padding: 18,
     borderRadius: 15,
     alignItems: 'center',
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    color: Colors.primary,
+    color: colors.primary,
     fontWeight: 'bold',
     textTransform: 'uppercase',
   },

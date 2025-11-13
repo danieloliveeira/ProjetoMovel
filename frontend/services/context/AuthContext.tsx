@@ -1,14 +1,17 @@
-import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../api";
 
 
 interface AuthContextData {
     token: string | null;
+    role: string | null;
     isLoading: boolean
     signIn(credentials: LoginRequestDTO): Promise<void>;
     signUp(userData: UserCreateDTO): Promise<void>;
     signOut(): void;
+    updateUserToken(newToken: string): Promise<void>;
 }
 
 type LoginRequestDTO = {
@@ -27,32 +30,64 @@ const AuthContext = createContext<AuthContextData> ({} as AuthContextData)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode}> = ({ children }) => {
     const [token, setToken] = useState<string |  null>(null)
+    const [role, setRole] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(true);
+
+
+    async function fetchUserProfile() {
+        try {
+            const res = await api.get('/users/profile')
+
+            setRole(res.data.role);
+            await AsyncStorage.setItem('userRole', res.data.role)
+        } catch (err){
+            console.log('Erro ao buscar role do usuario');
+        }
+    }
 
     useEffect(() => {
         async function loadStoragedData() {
-            const storagedToken = await SecureStore.getItemAsync('authToken');
+            try {
+                const storagedToken = await AsyncStorage.getItem('authToken');
+                const storagedRole = await AsyncStorage.getItem('userRole')
             if (storagedToken) {
                 api.defaults.headers.common['Authorization'] = `Bearer ${storagedToken}`;
-                setToken(storagedToken)
+                setToken(storagedToken);
+
+                if(storagedRole) {
+                    setRole(storagedRole);
+                }else {
+                    await fetchUserProfile()
+                }
             }
-            setIsLoading(false)
+            } catch (e) {
+                console.error("Falha ao carregar o token.", e);
+            } finally {
+                setIsLoading(false);
+            }
         }
-        loadStoragedData();
+    loadStoragedData();
     }, []);
+
+    const updateUserToken = async (newToken: string) => {
+        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+        await AsyncStorage.setItem('authToken', newToken);
+        setToken(newToken);
+    };
 
     const signIn = async ({ email, password}: LoginRequestDTO) => {
         try {
             const response = await api.post('/users/login', {email, password});
             const { token: responseToken } = response.data;
             console.log('resposta', response)
+
             setToken(responseToken);    
 
             api.defaults.headers.common['Authorization'] = `Bearer ${responseToken}`;
 
+            await AsyncStorage.setItem('authToken', responseToken);
 
-
-            await SecureStore.setItemAsync('authToken', responseToken);
+            await fetchUserProfile()
         } catch (error) {
             console.error('Login failed:', error);
             throw new Error('Email ou senha inválidos.');
@@ -71,12 +106,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode}> = ({ children 
     };
 
     const signOut = async () => {
-        await SecureStore.deleteItemAsync('authToken');
+        await AsyncStorage.removeItem('authToken');
+        await AsyncStorage.removeItem('userRole');
         setToken(null);
+        setRole(null);
+        router.navigate('/(auth)')
     }
 
     return (
-        <AuthContext.Provider value={{ token, isLoading, signIn, signUp, signOut }} >
+        <AuthContext.Provider value={{ token,role,isLoading, signIn, signUp, signOut, updateUserToken }} >
             { children }
         </AuthContext.Provider>
     );

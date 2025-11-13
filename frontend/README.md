@@ -1,50 +1,76 @@
-# Welcome to your Expo app 👋
+# 🎮 WydenGames — Seu Gerenciador de Jogos Pessoais
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Bem-vindo ao **WydenGames!** 👋  
+Uma aplicação mobile desenvolvida com **React Native**, **Expo Go** e **Expo Router** que ajuda jogadores a **organizar e acompanhar suas jogatinas** de forma simples e intuitiva.  
 
-## Get started
+---
 
-1. Install dependencies
+## 🕹️ Sobre o Projeto
 
+O **WydenGames** permite que você:
+- Registre os jogos que já jogou, está jogando ou pretende jogar.  
+- Adicione notas e opiniões sobre cada jogo.  
+- Mantenha sua **biblioteca pessoal de games** sempre atualizada.  
+- Tenha uma experiência inspirada em plataformas como *Backloggd* e *MyGameList*.
+
+O objetivo é proporcionar aos jogadores um espaço para **organizar, avaliar e compartilhar** suas experiências com games!  
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+- ⚛️ **React Native**
+- 📱 **Expo Go**
+- 🧭 **Expo Router**
+- 🎨 **Styled Components** (se aplicável)
+- 🌐 Integração com **WydenGames API** (backend em Java + Spring Boot)
+
+---
+
+## 🧩 Estrutura do Projeto
+```bash
+WydenGames/
+├── app/ # Páginas e rotas (Expo Router)
+├── components/ # Componentes reutilizáveis
+├── assets/ # Imagens, ícones, fontes
+├── services/ # Conexão com API
+├── hooks/ # Hooks personalizados
+└── package.json # Dependências do projeto
+
+```
+---
+
+## 🛠️ Como Executar o Projeto
+
+1. **Clone o repositório**
+   ```bash
+   git clone https://github.com/seu-usuario/wyden-games-app.git
+   cd wyden-games-app
+
+2. **Instale as Dependencias**
    ```bash
    npm install
-   ```
 
-2. Start the app
-
+3. **Inicie o projeto**
    ```bash
    npx expo start
-   ```
 
-In the output, you'll find options to open the app in a
+4. **Inicie o projeto**
+   ```bash
+   - Baixe o Expo Go na Play Store ou App Store
+   - Escaneie o QR Code exibido no terminal ou na aba do navegador.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+# 📱 Funcionalidades (Roadmap)
 
-## Get a fresh project
+   ✅ Cadastro e login de usuários
 
-When you're ready, run:
+   ✅ Listagem e busca de jogos
 
-```bash
-npm run reset-project
-```
+   ✅ Adição de jogos às listas (Played, Backlog, Wishlist)
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+   ✅ Avaliação e review de jogos
 
-## Learn more
+   🚧 Perfil do usuário com estatísticas de gameplay
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+   🚧 Dark mode

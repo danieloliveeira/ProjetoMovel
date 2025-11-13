@@ -24,14 +24,14 @@ const BackGroundImage: React.FC<BackGroundImageProps> = ({ children }) => {
 };
 
 const styles = StyleSheet.create({
-    background: {
+  background: {
     flex: 1,
     width: 'auto',
     height: 'auto'
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.65)', // Aumentei um pouco o overlay
+    backgroundColor: 'rgba(0, 0, 0, 0.65)', 
   },
   container: {
     flex: 1,
