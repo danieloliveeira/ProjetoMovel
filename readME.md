@@ -1,10 +1,10 @@
-# Projeto Móvel (Titulo do projeto) 
+# Projeto Móvel - WYDEN GAMES
 
 Projeto da disciplina de programação de dispositivos móveis com ReactNative + Expo (Android)
 
 Orientador: Prof. Luiz Gustavo Turatti
 
-A solução compartilhada neste repositório consiste no desenvolvimento de uma plataforma para ...
+A solução compartilhada neste repositório consiste no desenvolvimento de uma plataforma para ajudar usuarios a logar seus status de jogos
 
 ## Equipe do projeto
 
@@ -139,4 +139,5 @@ Tela 5: tela de perfil
 Tela 6: tela de logar o jogo
 
 Tela 7: tela de painel de admin ( se for um admin)
+
 
