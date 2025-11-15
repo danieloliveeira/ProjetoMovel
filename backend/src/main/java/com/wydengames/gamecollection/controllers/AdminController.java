@@ -1,5 +1,6 @@
 package com.wydengames.gamecollection.controllers;
 
+import com.wydengames.gamecollection.dto.AdminPasswordUpdateDTO;
 import com.wydengames.gamecollection.dto.UserCreateDTO;
 import com.wydengames.gamecollection.dto.UserResponseDTO;
 import com.wydengames.gamecollection.services.UserService;
@@ -32,5 +33,14 @@ public class AdminController {
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         List<UserResponseDTO> users = userService.getStandardUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @PatchMapping("/users/{id}/password")
+    public ResponseEntity<Void> updateUserPassword(
+            @PathVariable Long id,
+             @RequestBody AdminPasswordUpdateDTO passwordDTO)
+    {
+        userService.adminUpdatePassword(id, passwordDTO.getNewPassword());
+        return ResponseEntity.noContent().build();
     }
 }

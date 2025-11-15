@@ -5,6 +5,9 @@ import {
     ActivityIndicator,
     Alert,
     FlatList,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
     StyleSheet,
     Text,
     TextInput,
@@ -25,7 +28,9 @@ export default function AdminPanel() {
     const [activeTab, setActiveTab] = useState<'list' | 'create'>('list');
     const [users, setUsers] = useState<UserData[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
+    const [isSavingPassword, setIsSavingPassword] = useState(false);
     const [newName, setNewName] = useState('');
     const [newEmail, setNewEmail] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -47,6 +52,38 @@ export default function AdminPanel() {
             fetchUsers();
         }
     }, [activeTab]);
+    
+    const openPasswordModal = (user: UserData) => {
+        setSelectedUser(user);
+        setNewPassword(''); 
+        setIsModalVisible(true);
+    };
+    
+    const closePasswordModal = () => {
+        setIsModalVisible(false);
+        setSelectedUser(null);
+    };
+
+    const handlePasswordSave = async () => {
+        if (!selectedUser || newPassword.length < 6) {
+            Alert.alert("Erro", "A senha deve ter pelo menos 6 caracteres.");
+            return;
+        }
+
+        setIsSavingPassword(true);
+        try {
+            await api.patch(`/admin/users/${selectedUser.id}/password`, {
+                newPassword: newPassword
+            });
+            console.log(selectedUser.id);
+            Alert.alert("Sucesso", `Senha de ${selectedUser.username} atualizada.`);
+            closePasswordModal();
+        } catch (error) {
+            Alert.alert("Erro", "Falha ao atualizar a senha.");
+        } finally {
+            setIsSavingPassword(false);
+        }
+    };
 
     const handleDelete = (id: number, username: string) => {
         Alert.alert(
@@ -106,6 +143,12 @@ export default function AdminPanel() {
                 </View>
             </View>
 
+            <TouchableOpacity 
+                    onPress={() => openPasswordModal(item)}
+                    style={styles.iconButton}
+                >
+                    <Ionicons name="key-outline" size={24} color="#e0b0ff" />
+                </TouchableOpacity>
             <TouchableOpacity 
                 onPress={() => {
                     console.log("1. O toque foi detectado!");
@@ -183,10 +226,58 @@ export default function AdminPanel() {
                         />
 
                         <TouchableOpacity style={styles.createButton} onPress={handleCreate}>
-                            <Text style={styles.createButtonText}>Cadastrar Usuário</Text>
+                            <Text style={styles.createButtonText}>Create User</Text>
                         </TouchableOpacity>
                     </View>
                 )}
+                <Modal
+                transparent={true}
+                animationType="fade"
+                visible={isModalVisible}
+                onRequestClose={closePasswordModal}
+            >
+                <KeyboardAvoidingView 
+                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    style={styles.modalBackdrop}
+                >
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Resetar Senha</Text>
+                        <Text style={styles.modalSubtitle}>
+                            Usuário: <Text style={{fontWeight: 'bold'}}>{selectedUser?.username}</Text>
+                        </Text>
+
+                        <Text style={styles.label}>Nova Senha</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Mínimo 6 caracteres"
+                            placeholderTextColor="#666"
+                            secureTextEntry
+                            value={newPassword}
+                            onChangeText={setNewPassword}
+                        />
+
+                        <View style={styles.modalButtonRow}>
+                            <TouchableOpacity 
+                                style={[styles.modalButton, styles.cancelButton]} 
+                                onPress={closePasswordModal}
+                            >
+                                <Text style={styles.createButtonText}>Cancelar</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity 
+                                style={[styles.modalButton, styles.createButton]} 
+                                onPress={handlePasswordSave}
+                                disabled={isSavingPassword}
+                            >
+                                {isSavingPassword ? 
+                                    <ActivityIndicator color="#fff" /> : 
+                                    <Text style={styles.createButtonText}>Salvar</Text>
+                                }
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </KeyboardAvoidingView>
+            </Modal>
             </View>
         </View>
     );
@@ -291,5 +382,54 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
         fontSize: 16,
-    }
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        marginLeft: 10,
+    },
+    iconButton: {
+        padding: 10,
+        marginLeft: 5,
+    },
+
+    modalBackdrop: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContent: {
+        width: '90%',
+        backgroundColor: '#222',
+        borderRadius: 8,
+        padding: 20,
+        borderWidth: 1,
+        borderColor: '#333'
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#fff',
+        marginBottom: 5,
+    },
+    modalSubtitle: {
+        fontSize: 16,
+        color: '#ccc',
+        marginBottom: 20,
+    },
+    modalButtonRow: {
+        flexDirection: 'row',
+        marginTop: 20,
+        gap: 10,
+    },
+    modalButton: {
+        flex: 1,
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    cancelButton: {
+        backgroundColor: '#444',
+    },
+    
 });

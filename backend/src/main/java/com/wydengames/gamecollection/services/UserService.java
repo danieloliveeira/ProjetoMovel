@@ -126,4 +126,18 @@ public class UserService {
         }).collect(Collectors.toList());
     }
 
+    @Transactional
+    public void adminUpdatePassword(Long userId, String newPassword) {
+        // 1. Encontra o usuário
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + userId + " não encontrado."));
+
+        // 2. Encodifica a NOVA senha
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        // 3. Define e salva
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+    }
+
 }

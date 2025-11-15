@@ -52,7 +52,7 @@ export default function AppLayout() {
                 name="admin" 
                 options={{
                     drawerLabel: 'Admin Panel',
-                    title: 'Painel do Admin',
+                    title: 'Admin Panel',
                     drawerItemStyle: role === 'ADMIN' ? {} : { display: 'none' }
                 }}
                 redirect={role !== 'ADMIN'} 
